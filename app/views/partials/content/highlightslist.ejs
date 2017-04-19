@@ -1,0 +1,75 @@
+<article class="highlightslist <% if (pageID == 'home') { %>jumbotron hidden-xs<% } %>">
+  <div class="container">
+    <div class="row">
+        <% highlights.forEach(function(item) { %>
+        <div class="<% if (pageID == 'home') { %>col-xs-12 col-sm-6 col-md-4 col-lg-3 text-center<% } else { %>col-sm-8 <% } %>">
+          <h3 class="highlightslist-title"><%= item.site %></h3>
+          <h5 class="highlightslist-name"><a href="/highlights/<%= item.id %>"></a></h5>
+          <p class="highlightslist-info">
+            <a href="/highlights/<%= item.id %>">
+
+                <% if (pageID == 'home') { %>
+                  <img class="highlightslist-img img-circle" src="<%= item.image %>" alt="Photo of <%= item.site %>" width="300px"></a>
+                <% } %>
+
+                <% if (pageID == 'highlightsList') { %>
+                  <p><img class="highlightslist-img img-circle pull-left" src="<%= item.image %>" alt="Photo of <%= item.site %>" width="270px" height="270px"></a></p>
+                  <p><iframe width="400" height="300" src="<%= item.videoEmbed %>"></iframe></p>
+                <% } %>
+              </a>
+
+              <% if (pageID == 'highlightDetail') { %>
+                <img class="highlightslist-img img-responsive pull-left" src="<%= item.image %>" alt="Photo of <%= item.site %>" width="800px"></a>
+              <% } %>
+            </a>
+
+            <% if (pageID !== 'home') { %>
+              <% if (pageID == 'highlightsList') { %>
+                <%= item.category %>
+              <% } else { %>
+                <div style="clear: both;"><%- item.info %></div>
+                <br>
+                <div class="container">
+                  <div class="row">
+                      <div class="col-md-6">
+                        <iframe width="400" height="300" src="<%= item.videoEmbed %>"></iframe>
+                      </div>
+                      <div id="map<%= item.id %>" class="col-md-6" style="height: 300px; width: 400px;" float: left;>
+                      </div>
+
+                      <script>
+                      function initMap() {
+                        var centerPos = {lat: 46.892721, lng: 8.348665};
+                        var map1 = new google.maps.Map(document.getElementById('map<%= item.id %>'), {
+                          center: centerPos,
+                          zoom: 7,
+                          mapTypeId: google.maps.MapTypeId.ROADMAP,
+                          draggable: true,
+                        });
+
+                        var markerPos = {lat: <%- item.lat %>, lng: <%- item.long %>};
+                        var marker = new google.maps.Marker({
+                          position: markerPos,
+                          map: map1,
+                          title: '<%= item.site %>'
+                        });
+                        marker.addListener('click', function() {
+                          var infowindow1 = new google.maps.InfoWindow({
+                            content: "<%= item.category %>",
+                            width: 400
+                          });
+                          infowindow1.open(map1, marker);
+                        });
+                      }
+                      </script>
+                      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeJ61w3kktQsTffKcUUYOphjW1tjdeh4c&callback=initMap" async defer></script>
+                  </div>
+                </div>
+              <% } %>
+            <% } %>
+          </p>
+        </div>
+        <%  }); %>
+    </div><!-- row -->
+  </div><!-- container -->
+</article>
